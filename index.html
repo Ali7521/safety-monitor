@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Safety Monitor Dashboard</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 20px; background-color: #f5f5f7; }
+        .dashboard { max-width: 800px; margin: 0 auto; }
+        .card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .severity-critical { border-left: 5px solid #dc3545; }
+        .severity-high { border-left: 5px solid #fd7e14; }
+        .severity-medium { border-left: 5px solid #ffc107; }
+        .severity-low { border-left: 5px solid #17a2b8; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
+        .title { margin: 0; font-size: 1.2em; font-weight: 600; text-transform: capitalize; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; }
+        .bg-critical { background: #dc3545; color: white; }
+        .bg-high { background: #fd7e14; color: white; }
+        .bg-medium { background: #ffc107; color: black; }
+        .bg-low { background: #17a2b8; color: white; }
+        .meta { font-size: 0.9em; color: #666; margin-bottom: 5px; }
+        .action { background: #f8f9fa; padding: 10px; border-radius: 4px; font-size: 0.95em; color: #333; margin-top: 15px; border: 1px solid #e9ecef; }
+        h1 { text-align: center; color: #333; margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+    <div class="dashboard" id="events-container">
+        <h1>Safety Supervisor Dashboard</h1>
+        <div id="loading">Loading live events...</div>
+    </div>
+
+    <script>
+        // Mock data matching our Python script output
+        const events = [
+            {
+                "timestamp": new Date().toISOString(),
+                "zone": "Zone B (Fabrication Floor)",
+                "event_type": "ppe_violation",
+                "severity": "high",
+                "confidence_score": 0.91,
+                "individuals_involved": "Employee ID: 4920",
+                "recommended_action": "Worker without hard hat detected in Zone B (Fabrication Floor). Confidence 91%. Camera Cam-07. Recommend immediate intervention.",
+                "evidence_clip_ref": "clip_Cam-07.mp4"
+            },
+            {
+                "timestamp": new Date().toISOString(),
+                "zone": "Zone A (Heavy Machinery)",
+                "event_type": "slip_near_miss",
+                "severity": "medium",
+                "confidence_score": 0.55,
+                "individuals_involved": "Unknown",
+                "recommended_action": "Low confidence detection. Logging for trend analysis only.",
+                "evidence_clip_ref": "clip_Cam-12.mp4"
+            },
+            {
+                "timestamp": new Date().toISOString(),
+                "zone": "Zone B (Fabrication Floor)",
+                "event_type": "fire_hazard",
+                "severity": "critical",
+                "confidence_score": 0.99,
+                "individuals_involved": "None (Evacuation needed)",
+                "recommended_action": "Abnormal heat signature and smoke detected. Confidence 99%. Camera ThermCam-02. Recommend immediate intervention.",
+                "evidence_clip_ref": "clip_ThermCam-02.mp4"
+            }
+        ];
+
+        document.getElementById('loading').style.display = 'none';
+        const container = document.getElementById('events-container');
+
+        events.forEach(event => {
+            const card = document.createElement('div');
+            card.className = `card severity-${event.severity}`;
+            
+            const timeStr = new Date(event.timestamp).toLocaleTimeString();
+            
+            card.innerHTML = `
+                <div class="header">
+                    <h3 class="title">${event.event_type.replace(/_/g, ' ')}</h3>
+                    <span class="badge bg-${event.severity}">${event.severity.toUpperCase()}</span>
+                </div>
+                <div class="meta"><strong>Zone:</strong> ${event.zone}</div>
+                <div class="meta"><strong>Time:</strong> ${timeStr}</div>
+                <div class="meta"><strong>Confidence:</strong> ${(event.confidence_score * 100).toFixed(0)}%</div>
+                <div class="meta"><strong>Individuals:</strong> ${event.individuals_involved}</div>
+                <div class="meta"><strong>Video Clip:</strong> <a href="#">${event.evidence_clip_ref}</a></div>
+                <div class="action">
+                    <strong>Action:</strong> ${event.recommended_action}
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>
