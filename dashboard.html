@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafetyMonitor AI - Live Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; }
+        .severity-critical { color: #ef4444; background: #fef2f2; border-color: #fca5a5; }
+        .severity-high { color: #f97316; background: #fff7ed; border-color: #fdba74; }
+        .severity-medium { color: #eab308; background: #fefce8; border-color: #fde047; }
+        .severity-low { color: #3b82f6; background: #eff6ff; border-color: #93c5fd; }
+        .pulsing-dot { animation: pulse-opacity 1.5s infinite; }
+        @keyframes pulse-opacity {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <nav class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center shadow-md">
+        <div class="flex items-center space-x-3">
+            <i class="fas fa-shield-halved text-sky-400 text-xl"></i>
+            <span class="text-xl font-bold tracking-tight">SafetyMonitor<span class="text-sky-400">.ai</span></span>
+            <span class="ml-4 px-2 py-1 bg-red-500/20 text-red-400 text-xs font-bold rounded flex items-center border border-red-500/30">
+                <div class="w-2 h-2 rounded-full bg-red-500 mr-2 pulsing-dot"></div> LIVE AI FEED
+            </span>
+        </div>
+        <div class="space-x-4">
+            <a href="/" class="text-sm font-medium hover:text-sky-400">Back to Website</a>
+            <a href="/api/export/csv" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white text-sm font-semibold rounded transition shadow">
+                <i class="fas fa-file-csv mr-2"></i>Export Report
+            </a>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Top Metrics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="text-sm text-slate-500 font-medium mb-1">Open Incidents</div>
+                <div class="text-3xl font-bold text-slate-800" id="metric-open">-</div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="text-sm text-slate-500 font-medium mb-1">AI Confidence Avg</div>
+                <div class="text-3xl font-bold text-sky-600">92%</div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="text-sm text-slate-500 font-medium mb-1">Fatigue Interventions</div>
+                <div class="text-3xl font-bold text-purple-600" id="metric-fatigue">-</div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <div class="text-sm text-slate-500 font-medium mb-1">Gen-AI Voice Warnings</div>
+                <div class="text-3xl font-bold text-emerald-600" id="metric-voice">-</div>
+            </div>
+        </div>
+
+        <!-- Incident Table -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                <h2 class="text-lg font-bold text-slate-800"><i class="fas fa-list text-slate-400 mr-2"></i> Real-time Incident Register</h2>
+                <div class="text-xs text-slate-500 font-medium">Auto-refreshing every 3s</div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-100 text-slate-600 font-medium">
+                        <tr>
+                            <th class="px-6 py-3">Time</th>
+                            <th class="px-6 py-3">Zone</th>
+                            <th class="px-6 py-3">Event Type</th>
+                            <th class="px-6 py-3">Severity</th>
+                            <th class="px-6 py-3">Details / Action</th>
+                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="incidents-body" class="divide-y divide-slate-100">
+                        <!-- Loaded via JS -->
+                        <tr><td colspan="7" class="px-6 py-8 text-center text-slate-400">Loading AI feed...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatType(type) {
+            return type.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function getSeverityBadge(sev) {
+            return `<span class="px-2 py-1 text-xs font-bold border rounded severity-${sev.toLowerCase()}">${sev.toUpperCase()}</span>`;
+        }
+        
+        function resolveIncident(id) {
+            fetch(`/api/incidents/${id}/resolve`, { method: 'POST' })
+                .then(() => fetchIncidents());
+        }
+
+        function fetchIncidents() {
+            fetch('/api/incidents')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('incidents-body');
+                    tbody.innerHTML = '';
+                    
+                    let openCount = 0;
+                    let fatigueCount = 0;
+                    let voiceCount = 0;
+
+                    if (data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-8 text-center text-slate-400">No events detected yet. AI is monitoring.</td></tr>';
+                        return;
+                    }
+
+                    data.forEach(inc => {
+                        if (inc.status === 'Open') openCount++;
+                        if (inc.event_type === 'fatigue_detected') fatigueCount++;
+                        if (inc.event_type === 'vehicle_proximity') voiceCount++;
+
+                        const time = new Date(inc.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+                        
+                        const row = document.createElement('tr');
+                        row.className = 'hover:bg-slate-50 transition';
+                        
+                        let actionBtn = inc.status === 'Open' 
+                            ? `<button onclick="resolveIncident(${inc.id})" class="text-xs bg-emerald-100 text-emerald-700 hover:bg-emerald-200 px-3 py-1 rounded font-bold transition">Resolve</button>`
+                            : `<span class="text-xs text-slate-400 font-semibold"><i class="fas fa-check mr-1"></i>Closed</span>`;
+
+                        row.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap text-slate-500 font-mono">${time}</td>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium">${inc.zone}</td>
+                            <td class="px-6 py-4 whitespace-nowrap font-bold">${formatType(inc.event_type)} <span class="text-xs text-slate-400 ml-1">(${(inc.confidence*100).toFixed(0)}%)</span></td>
+                            <td class="px-6 py-4 whitespace-nowrap">${getSeverityBadge(inc.severity)}</td>
+                            <td class="px-6 py-4 text-slate-600 max-w-xs truncate">${inc.action_taken}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 py-1 text-xs font-bold rounded ${inc.status === 'Open' ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500'}">
+                                    ${inc.status}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">${actionBtn}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+
+                    document.getElementById('metric-open').innerText = openCount;
+                    document.getElementById('metric-fatigue').innerText = fatigueCount;
+                    document.getElementById('metric-voice').innerText = voiceCount;
+                });
+        }
+
+        // Poll every 3 seconds
+        setInterval(fetchIncidents, 3000);
+        fetchIncidents();
+    </script>
+</body>
+</html>
