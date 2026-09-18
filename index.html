@@ -1,93 +1,283 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>AI Safety Monitor Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety Monitor - Incident Management Software</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; padding: 20px; background-color: #f5f5f7; }
-        .dashboard { max-width: 800px; margin: 0 auto; }
-        .card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .severity-critical { border-left: 5px solid #dc3545; }
-        .severity-high { border-left: 5px solid #fd7e14; }
-        .severity-medium { border-left: 5px solid #ffc107; }
-        .severity-low { border-left: 5px solid #17a2b8; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
-        .title { margin: 0; font-size: 1.2em; font-weight: 600; text-transform: capitalize; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold; }
-        .bg-critical { background: #dc3545; color: white; }
-        .bg-high { background: #fd7e14; color: white; }
-        .bg-medium { background: #ffc107; color: black; }
-        .bg-low { background: #17a2b8; color: white; }
-        .meta { font-size: 0.9em; color: #666; margin-bottom: 5px; }
-        .action { background: #f8f9fa; padding: 10px; border-radius: 4px; font-size: 0.95em; color: #333; margin-top: 15px; border: 1px solid #e9ecef; }
-        h1 { text-align: center; color: #333; margin-bottom: 30px; }
+        .feature-grid-item {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .bg-primary-dark {
+            background-color: #0d3b66;
+        }
+        .text-primary {
+            color: #0d3b66;
+        }
+        .btn-primary {
+            background-color: #0d3b66;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #082846;
+        }
+        .btn-secondary {
+            background-color: #20b2aa;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #178c85;
+        }
     </style>
 </head>
-<body>
-    <div class="dashboard" id="events-container">
-        <h1>Safety Supervisor Dashboard</h1>
-        <div id="loading">Loading live events...</div>
-    </div>
+<body class="font-sans antialiased text-gray-800 bg-white">
 
-    <script>
-        // Mock data matching our Python script output
-        const events = [
-            {
-                "timestamp": new Date().toISOString(),
-                "zone": "Zone B (Fabrication Floor)",
-                "event_type": "ppe_violation",
-                "severity": "high",
-                "confidence_score": 0.91,
-                "individuals_involved": "Employee ID: 4920",
-                "recommended_action": "Worker without hard hat detected in Zone B (Fabrication Floor). Confidence 91%. Camera Cam-07. Recommend immediate intervention.",
-                "evidence_clip_ref": "clip_Cam-07.mp4"
-            },
-            {
-                "timestamp": new Date().toISOString(),
-                "zone": "Zone A (Heavy Machinery)",
-                "event_type": "slip_near_miss",
-                "severity": "medium",
-                "confidence_score": 0.55,
-                "individuals_involved": "Unknown",
-                "recommended_action": "Low confidence detection. Logging for trend analysis only.",
-                "evidence_clip_ref": "clip_Cam-12.mp4"
-            },
-            {
-                "timestamp": new Date().toISOString(),
-                "zone": "Zone B (Fabrication Floor)",
-                "event_type": "fire_hazard",
-                "severity": "critical",
-                "confidence_score": 0.99,
-                "individuals_involved": "None (Evacuation needed)",
-                "recommended_action": "Abnormal heat signature and smoke detected. Confidence 99%. Camera ThermCam-02. Recommend immediate intervention.",
-                "evidence_clip_ref": "clip_ThermCam-02.mp4"
-            }
-        ];
+    <!-- Navigation -->
+    <nav class="bg-primary-dark text-white px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center space-x-2">
+            <i class="fas fa-shield-alt text-3xl text-teal-400"></i>
+            <span class="text-2xl font-bold tracking-wider">SAFETY<span class="text-teal-400">MONITOR</span></span>
+        </div>
+        <div class="hidden md:flex space-x-6 text-sm font-semibold items-center">
+            <a href="#" class="hover:text-teal-400">HOME</a>
+            <a href="#" class="hover:text-teal-400">OVERVIEW</a>
+            <a href="#" class="hover:text-teal-400">DIGITAL SOLUTIONS</a>
+            <a href="#" class="hover:text-teal-400">APPS & UTILITIES</a>
+            <a href="#" class="hover:text-teal-400">CASE STUDIES</a>
+            <a href="#" class="hover:text-teal-400">CONTACT US</a>
+            <a href="#" class="btn-secondary px-4 py-2 rounded">Resources <i class="fas fa-chevron-down text-xs ml-1"></i></a>
+        </div>
+        <button class="md:hidden text-2xl"><i class="fas fa-bars"></i></button>
+    </nav>
 
-        document.getElementById('loading').style.display = 'none';
-        const container = document.getElementById('events-container');
-
-        events.forEach(event => {
-            const card = document.createElement('div');
-            card.className = `card severity-${event.severity}`;
-            
-            const timeStr = new Date(event.timestamp).toLocaleTimeString();
-            
-            card.innerHTML = `
-                <div class="header">
-                    <h3 class="title">${event.event_type.replace(/_/g, ' ')}</h3>
-                    <span class="badge bg-${event.severity}">${event.severity.toUpperCase()}</span>
+    <!-- Hero Section -->
+    <section class="container mx-auto px-6 py-16 md:py-24 flex flex-col md:flex-row items-center">
+        <div class="md:w-1/2 md:pr-12">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-primary leading-tight mb-6">
+                Incident Management Software : Respond, Resolve, Learn
+            </h1>
+            <h2 class="text-xl md:text-2xl font-semibold text-teal-600 mb-6">
+                Navigating through incidents with resilience — transforming challenges into opportunities for growth and improvement.
+            </h2>
+            <p class="text-gray-600 mb-8 text-lg">
+                In the realm of workplace safety, effective incident management is paramount to ensuring the well-being of employees and the integrity of operations. Our Incident Management System offers a comprehensive approach to handling incidents, from initial reporting to resolution, with a focus on continuous improvement and organizational learning.
+            </p>
+            <a href="#" class="btn-primary px-8 py-3 rounded text-lg font-semibold shadow-lg inline-flex items-center">
+                Enquire now <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+            <a href="dashboard.html" class="ml-4 text-primary font-semibold hover:underline">
+                View Live Dashboard
+            </a>
+        </div>
+        <div class="md:w-1/2 mt-12 md:mt-0 relative">
+            <!-- Mockup Illustration -->
+            <div class="bg-gray-100 rounded-xl shadow-2xl p-6 relative z-10 border border-gray-200">
+                <div class="flex justify-between items-center mb-4 border-b pb-2">
+                    <span class="font-bold text-gray-700">Incident Register</span>
                 </div>
-                <div class="meta"><strong>Zone:</strong> ${event.zone}</div>
-                <div class="meta"><strong>Time:</strong> ${timeStr}</div>
-                <div class="meta"><strong>Confidence:</strong> ${(event.confidence_score * 100).toFixed(0)}%</div>
-                <div class="meta"><strong>Individuals:</strong> ${event.individuals_involved}</div>
-                <div class="meta"><strong>Video Clip:</strong> <a href="#">${event.evidence_clip_ref}</a></div>
-                <div class="action">
-                    <strong>Action:</strong> ${event.recommended_action}
+                <div class="flex space-x-4 mb-6">
+                    <div class="bg-white p-3 rounded shadow w-1/3 text-center border-t-4 border-blue-500">
+                        <div class="text-xs text-gray-500 uppercase">TRIR</div>
+                        <div class="text-xl font-bold text-blue-500">0.42</div>
+                    </div>
+                    <div class="bg-white p-3 rounded shadow w-1/3 text-center border-t-4 border-teal-500">
+                        <div class="text-xs text-gray-500 uppercase">LTIFR</div>
+                        <div class="text-xl font-bold text-teal-500">0.18</div>
+                    </div>
+                    <div class="bg-white p-3 rounded shadow w-1/3 text-center border-t-4 border-orange-500">
+                        <div class="text-xs text-gray-500 uppercase">Open CAPA</div>
+                        <div class="text-xl font-bold text-orange-500">12</div>
+                    </div>
                 </div>
-            `;
-            container.appendChild(card);
-        });
-    </script>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center bg-white p-3 rounded shadow-sm text-sm">
+                        <span class="text-gray-600 font-mono">INC-2026-0341</span>
+                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold">Investigating</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-white p-3 rounded shadow-sm text-sm">
+                        <span class="text-gray-600 font-mono">INC-2026-0338</span>
+                        <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold">CAPA Pending</span>
+                    </div>
+                    <div class="flex justify-between items-center bg-white p-3 rounded shadow-sm text-sm">
+                        <span class="text-gray-600 font-mono">INC-2026-0335</span>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">Closed</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Abstract decorative elements -->
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-teal-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+        </div>
+    </section>
+
+    <!-- Incident Management Software Features -->
+    <section class="bg-gray-50 py-16">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 inline-block pb-2 border-b-4 border-orange-400">Incident Management Software Features</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-white p-8 rounded-lg shadow border border-gray-100 text-center feature-grid-item">
+                    <div class="text-5xl text-orange-400 mb-6 flex justify-center"><i class="fas fa-search-location"></i></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Efficient Incident Tracking</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Capture, track, and analyze incidents seamlessly through our digital platform, ensuring transparency and accountability throughout the incident management process.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="bg-white p-8 rounded-lg shadow border border-gray-100 text-center feature-grid-item">
+                    <div class="text-5xl text-orange-400 mb-6 flex justify-center"><i class="fas fa-project-diagram"></i></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Root Cause Analysis</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Utilize guided checklists or advanced analysis techniques like Fishbone and Why-Why to identify the root causes of incidents, enabling you to implement targeted corrective actions and prevent recurrence.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="bg-white p-8 rounded-lg shadow border border-gray-100 text-center feature-grid-item">
+                    <div class="text-5xl text-orange-400 mb-6 flex justify-center"><i class="fas fa-tasks"></i></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Action Management</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Link identified root causes to actionable items for prompt resolution, facilitating a proactive approach to addressing safety issues and preventing future incidents.</p>
+                </div>
+                <!-- Feature 4 -->
+                <div class="bg-white p-8 rounded-lg shadow border border-gray-100 text-center feature-grid-item">
+                    <div class="text-5xl text-orange-400 mb-6 flex justify-center"><i class="fas fa-bell"></i></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Safety Alerts</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Receive automated alerts for incidents, ensuring timely communication and enabling swift response to mitigate risks and minimize the impact on operations.</p>
+                </div>
+                <!-- Feature 5 -->
+                <div class="bg-white p-8 rounded-lg shadow border border-gray-100 text-center feature-grid-item">
+                    <div class="text-5xl text-orange-400 mb-6 flex justify-center"><i class="fas fa-chart-line"></i></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Advanced Analytics</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Harness powerful analytics and reporting tools to gain insights into incident trends, identify areas for improvement, and drive continuous enhancement of safety protocols.</p>
+                </div>
+                <!-- Feature 6 -->
+                <div class="bg-white p-8 rounded-lg shadow border border-gray-100 text-center feature-grid-item">
+                    <div class="text-5xl text-orange-400 mb-6 flex justify-center"><i class="fas fa-mobile-alt"></i></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Mobile App Accessibility</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Access the Incident Management System anytime, anywhere with our dedicated mobile app, enabling quick incident reporting, collaboration among response teams, and real-time updates.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comprehensive Digital Transformation Grid -->
+    <section class="bg-primary-dark py-16 text-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Digital transformation for your Safety operations</h2>
+                <h3 class="text-xl text-teal-300 font-semibold mb-2">With Flexible Robust Solution That supports</h3>
+                <div class="w-24 h-1 bg-orange-400 mx-auto"></div>
+            </div>
+            
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <!-- Using a slightly lighter blue for the boxes -->
+                
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-laptop text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Web based</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-mobile text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Mobile App</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-tachometer-alt text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Dashboards</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-clipboard-list text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Custom Reports</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-project-diagram text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Workflows</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-language text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Multilingual</span>
+                </div>
+                
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-qrcode text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">QR Code</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-cloud text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Cloud / On-premise</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-chart-pie text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">BI Analytics</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-envelope-open-text text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Email/Text Alerts</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-sitemap text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Escalation matrix</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-key text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Single Sign On</span>
+                </div>
+                
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-shield-alt text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Data Security</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-file-signature text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Audit Trail</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-search text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Search Engine</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-image text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Image Annotation</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-puzzle-piece text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Open to Integrate</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer">
+                    <i class="fas fa-database text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Data Migration</span>
+                </div>
+                
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer col-span-2 sm:col-span-1 lg:col-start-2">
+                    <i class="fas fa-calendar-alt text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Scheduler</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer sm:col-span-1">
+                    <i class="fas fa-file-export text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Data Exporter</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer sm:col-span-1">
+                    <i class="fas fa-signature text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Electronic Signatures</span>
+                </div>
+                <div class="bg-[#154c79] hover:bg-[#1a5b8e] transition p-4 rounded text-center flex flex-col items-center justify-center min-h-[120px] cursor-pointer sm:col-span-1 lg:col-span-1">
+                    <i class="fas fa-map-marked-alt text-3xl mb-3 text-teal-300"></i>
+                    <span class="text-sm font-semibold">Geotagging</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-8 text-center">
+        <p>&copy; 2026 SafetyMonitor AI. All rights reserved.</p>
+    </footer>
+
 </body>
 </html>
