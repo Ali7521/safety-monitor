@@ -581,31 +581,99 @@
                 model.detect(video).then(predictions => {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     
+                    // --- Draw "RESTRICTED ZONE" (Exclusion Zone feature) ---
+                    const zoneX = canvas.width - 200;
+                    const zoneY = canvas.height - 150;
+                    const zoneW = 180;
+                    const zoneH = 130;
+                    
+                    ctx.fillStyle = 'rgba(255, 165, 0, 0.15)';
+                    ctx.strokeStyle = 'orange';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([5, 5]);
+                    ctx.beginPath();
+                    ctx.rect(zoneX, zoneY, zoneW, zoneH);
+                    ctx.fill();
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                    
+                    ctx.fillStyle = 'orange';
+                    ctx.font = 'bold 12px Inter';
+                    ctx.fillText('EXCLUSION ZONE', zoneX + 5, zoneY + 15);
+
+                    let phoneDetected = false;
+                    
                     predictions.forEach(pred => {
-                        ctx.beginPath();
-                        ctx.rect(pred.bbox[0], pred.bbox[1], pred.bbox[2], pred.bbox[3]);
-                        ctx.lineWidth = 3;
+                        const [x, y, w, h] = pred.bbox;
                         
-                        // Color styling
-                        if (pred.class === 'person') {
-                            ctx.strokeStyle = '#ef4444'; // Red
-                            ctx.fillStyle = 'rgba(239, 68, 68, 0.15)';
-                        } else {
-                            ctx.strokeStyle = '#20b2aa'; // Teal
-                            ctx.fillStyle = 'rgba(32, 178, 170, 0.15)';
+                        // CELL PHONE (Distracted Working Feature)
+                        if (pred.class === 'cell phone') {
+                            ctx.strokeStyle = '#a855f7'; // Purple
+                            ctx.lineWidth = 3;
+                            ctx.strokeRect(x, y, w, h);
+                            ctx.fillStyle = '#a855f7';
+                            ctx.fillRect(x, y - 20, w, 20);
+                            ctx.fillStyle = 'white';
+                            ctx.fillText('DISTRACTED WORKING', x + 5, y - 5);
+                            phoneDetected = true;
                         }
-                        ctx.stroke();
-                        ctx.fill();
                         
-                        // Draw label background
-                        ctx.fillStyle = ctx.strokeStyle;
-                        ctx.fillRect(pred.bbox[0], pred.bbox[1] - 20, pred.bbox[2], 20);
-                        
-                        // Draw label text
-                        ctx.fillStyle = 'white';
-                        ctx.font = 'bold 12px Inter';
-                        const text = `${pred.class.toUpperCase()} - ${Math.round(pred.score * 100)}%`;
-                        ctx.fillText(text, pred.bbox[0] + 5, pred.bbox[1] - 5);
+                        // PERSON (PPE and Safe/Unsafe Analysis)
+                        if (pred.class === 'person') {
+                            // Check if person is in exclusion zone
+                            const inZone = (x < zoneX + zoneW && x + w > zoneX && y < zoneY + zoneH && y + h > zoneY);
+                            
+                            // PPE Simulation based on screen position (Left = Unsafe, Right = Safe)
+                            // This allows the user to move around to test different states!
+                            const isSafe = (x + (w/2)) > (canvas.width / 2); 
+                            
+                            // Determine final status
+                            let boxColor = '#20b2aa'; // Teal (Safe)
+                            let statusText = 'PPE COMPLIANT';
+                            let helmet = '✅ Detected';
+                            let vest = '✅ Detected';
+                            
+                            if (inZone) {
+                                boxColor = '#ef4444'; // Red (Danger)
+                                statusText = 'ZONE VIOLATION';
+                            } else if (!isSafe) {
+                                boxColor = '#ef4444'; // Red (Danger)
+                                statusText = 'UNSAFE (NO HELMET)';
+                                helmet = '❌ Missing';
+                                vest = '❌ Missing';
+                            } else if (phoneDetected) {
+                                boxColor = '#f59e0b'; // Amber (Warning)
+                                statusText = 'SAFETY WARNING';
+                            }
+
+                            // Draw Person Bounding Box
+                            ctx.strokeStyle = boxColor;
+                            ctx.lineWidth = 3;
+                            ctx.strokeRect(x, y, w, h);
+                            ctx.fillStyle = boxColor.replace(')', ', 0.15)').replace('rgb', 'rgba'); // semi-transparent
+                            ctx.fillRect(x, y, w, h);
+                            
+                            // Draw HUD Data Box next to person
+                            const hudX = x + w + 10;
+                            const hudY = y;
+                            if (hudX < canvas.width - 100) {
+                                ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+                                ctx.fillRect(hudX, hudY, 130, 85);
+                                ctx.strokeStyle = boxColor;
+                                ctx.lineWidth = 1;
+                                ctx.strokeRect(hudX, hudY, 130, 85);
+                                
+                                ctx.fillStyle = boxColor;
+                                ctx.font = 'bold 10px monospace';
+                                ctx.fillText(`STATUS: ${statusText}`, hudX + 5, hudY + 15);
+                                ctx.fillStyle = 'white';
+                                ctx.font = '10px monospace';
+                                ctx.fillText(`CONF: ${Math.round(pred.score * 100)}%`, hudX + 5, hudY + 30);
+                                ctx.fillText(`HELMET: ${helmet}`, hudX + 5, hudY + 45);
+                                ctx.fillText(`VEST: ${vest}`, hudX + 5, hudY + 60);
+                                ctx.fillText(`ID: EMP-TRACKED`, hudX + 5, hudY + 75);
+                            }
+                        }
                     });
                     
                     requestAnimationFrame(predictWebcam);
