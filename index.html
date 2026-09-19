@@ -25,20 +25,20 @@
         body { font-family: 'Inter', -apple-system, sans-serif; }
     </style>
 </head>
-<body class="bg-corporate-light text-slate-800 antialiased">
+<body class="bg-corporate-light text-slate-800 antialiased scroll-smooth">
 
     <!-- Navigation -->
-    <nav class="bg-white border-b border-gray-200 fixed w-full z-50 top-0">
+    <nav class="bg-white border-b border-gray-200 fixed w-full z-50 top-0 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
-                <div class="flex items-center">
+                <div class="flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
                     <i class="fas fa-shield-alt text-corporate-teal text-3xl mr-3"></i>
                     <span class="text-2xl font-bold text-corporate-blue tracking-tight">Tech EHS <span class="text-sm font-normal text-corporate-teal align-top">AI</span></span>
                 </div>
                 <div class="hidden md:flex space-x-8">
-                    <a href="#" class="text-gray-600 hover:text-corporate-teal font-medium transition">Platform</a>
-                    <a href="#" class="text-gray-600 hover:text-corporate-teal font-medium transition">Solutions</a>
-                    <a href="#" class="text-gray-600 hover:text-corporate-teal font-medium transition">Integrations</a>
+                    <a href="#platform" class="text-gray-600 hover:text-corporate-teal font-medium transition">Platform</a>
+                    <a href="#solutions" class="text-gray-600 hover:text-corporate-teal font-medium transition">Solutions</a>
+                    <a href="#integrations" class="text-gray-600 hover:text-corporate-teal font-medium transition">Integrations</a>
                 </div>
                 <div class="flex space-x-4 items-center">
                     <a href="dashboard.html" class="text-corporate-blue font-bold hover:text-corporate-teal transition">Login</a>
@@ -75,7 +75,7 @@
                         
                         <!-- Mock AI Box -->
                         <div class="absolute top-1/4 left-1/3 w-32 h-40 border-2 border-red-500 bg-red-500/20">
-                            <span class="bg-red-500 text-white text-xs px-1 absolute -top-5 left-[-2px] font-mono">NO_HARDHAT 98%</span>
+                            <span class="bg-red-500 text-white text-xs px-1 absolute -top-5 left-[-2px] font-mono shadow-sm">NO_HARDHAT 98%</span>
                         </div>
                     </div>
                 </div>
@@ -83,32 +83,32 @@
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="py-20 bg-corporate-light border-t border-gray-200">
+    <!-- PLATFORM SECTION -->
+    <section id="platform" class="py-20 bg-corporate-light border-t border-gray-200 scroll-mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-corporate-blue">Enterprise-Grade EHS Platform</h2>
+                <h2 class="text-3xl font-bold text-corporate-blue">Enterprise-Grade Platform Features</h2>
                 <p class="text-gray-500 mt-4 max-w-2xl mx-auto">Everything you need to automate safety audits, track compliance, and manage workflows in one unified dashboard.</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-8 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
+                <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transition">
                     <div class="w-14 h-14 bg-teal-50 rounded-lg flex items-center justify-center mb-6">
                         <i class="fas fa-video text-2xl text-corporate-teal"></i>
                     </div>
                     <h3 class="text-xl font-bold text-corporate-blue mb-3">Live AI Computer Vision</h3>
-                    <p class="text-gray-600">Instantly detects PPE violations, forklift proximity risks, and spills using your existing cameras.</p>
+                    <p class="text-gray-600">Instantly detects PPE violations, forklift proximity risks, and spills using your existing IP cameras.</p>
                 </div>
                 
-                <div class="bg-white p-8 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
+                <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transition">
                     <div class="w-14 h-14 bg-blue-50 rounded-lg flex items-center justify-center mb-6">
                         <i class="fas fa-chart-pie text-2xl text-corporate-blue"></i>
                     </div>
                     <h3 class="text-xl font-bold text-corporate-blue mb-3">Advanced BI Analytics</h3>
-                    <p class="text-gray-600">Track incident hotspots, compliance rates, and automated interventions with interactive charts.</p>
+                    <p class="text-gray-600">Track incident hotspots, compliance rates, and automated interventions with real-time interactive charts.</p>
                 </div>
                 
-                <div class="bg-white p-8 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
+                <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 hover:shadow-lg transition">
                     <div class="w-14 h-14 bg-teal-50 rounded-lg flex items-center justify-center mb-6">
                         <i class="fas fa-file-signature text-2xl text-corporate-teal"></i>
                     </div>
@@ -119,10 +119,97 @@
         </div>
     </section>
 
+    <!-- SOLUTIONS SECTION -->
+    <section id="solutions" class="py-20 bg-white border-t border-gray-200 scroll-mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-corporate-blue">Industry Solutions</h2>
+                <p class="text-gray-500 mt-4 max-w-2xl mx-auto">Tailored AI models trained specifically for the most demanding high-risk environments.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-corporate-blue text-white">
+                                <i class="fas fa-industry text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold text-corporate-blue">Manufacturing & Warehousing</h3>
+                            <p class="mt-2 text-gray-600">Monitor forklift paths, enforce exclusion zones, and track ergonomic lifting postures on the assembly line.</p>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-corporate-teal text-white">
+                                <i class="fas fa-hard-hat text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold text-corporate-blue">Construction Sites</h3>
+                            <p class="mt-2 text-gray-600">Ensure 100% PPE compliance (hard hats, vests) and detect unauthorized access in active hazardous zones.</p>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
+                                <i class="fas fa-oil-well text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-xl font-bold text-corporate-blue">Oil, Gas & Chemical</h3>
+                            <p class="mt-2 text-gray-600">Predictive leak detection, fire/smoke warnings, and strict confined-space entry monitoring.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-corporate-light p-8 rounded-2xl shadow-inner border border-gray-200">
+                    <h4 class="font-bold text-corporate-blue mb-4">Live Safety Impact</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-center text-gray-700"><i class="fas fa-check-circle text-corporate-teal mr-3"></i> 42% Reduction in Total Recordable Incidents (TRIR)</li>
+                        <li class="flex items-center text-gray-700"><i class="fas fa-check-circle text-corporate-teal mr-3"></i> 100% Real-time Audit Compliance</li>
+                        <li class="flex items-center text-gray-700"><i class="fas fa-check-circle text-corporate-teal mr-3"></i> 3x Faster CAPA Closure Rates</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTEGRATIONS SECTION -->
+    <section id="integrations" class="py-20 bg-corporate-blue text-white scroll-mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold mb-4">Seamless Integrations</h2>
+            <p class="text-blue-200 mb-12 max-w-2xl mx-auto">Tech EHS AI connects directly to your existing hardware and software stack. No rip-and-replace required.</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 opacity-80">
+                <div class="bg-white/10 p-6 rounded-lg backdrop-blur-sm flex flex-col items-center">
+                    <i class="fas fa-camera-security text-4xl mb-3"></i>
+                    <span class="font-bold">Any CCTV System</span>
+                    <span class="text-xs text-blue-200 mt-1">(RTSP / ONVIF)</span>
+                </div>
+                <div class="bg-white/10 p-6 rounded-lg backdrop-blur-sm flex flex-col items-center">
+                    <i class="fab fa-microsoft text-4xl mb-3"></i>
+                    <span class="font-bold">Azure AD</span>
+                    <span class="text-xs text-blue-200 mt-1">Single Sign-On</span>
+                </div>
+                <div class="bg-white/10 p-6 rounded-lg backdrop-blur-sm flex flex-col items-center">
+                    <i class="fas fa-database text-4xl mb-3"></i>
+                    <span class="font-bold">SAP / Oracle</span>
+                    <span class="text-xs text-blue-200 mt-1">ERP Syncing</span>
+                </div>
+                <div class="bg-white/10 p-6 rounded-lg backdrop-blur-sm flex flex-col items-center">
+                    <i class="fas fa-mobile-alt text-4xl mb-3"></i>
+                    <span class="font-bold">SMS Gateways</span>
+                    <span class="text-xs text-blue-200 mt-1">Twilio Integration</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Call to Action -->
-    <section class="py-20 bg-corporate-blue text-center px-4">
-        <h2 class="text-3xl font-bold text-white mb-6">Ready to upgrade your safety culture?</h2>
-        <a href="dashboard.html" class="inline-block bg-corporate-teal hover:bg-teal-400 text-white px-10 py-4 rounded-md font-bold text-lg shadow-lg transition transform hover:-translate-y-1">Launch Live Dashboard Demo</a>
+    <section class="py-20 bg-gray-50 text-center px-4 border-t border-gray-200">
+        <h2 class="text-3xl font-bold text-corporate-blue mb-6">Ready to upgrade your safety culture?</h2>
+        <a href="dashboard.html" class="inline-block bg-corporate-teal hover:bg-teal-600 text-white px-10 py-4 rounded-md font-bold text-lg shadow-lg transition transform hover:-translate-y-1">Launch Live Dashboard Demo</a>
     </section>
 
     <!-- Footer -->
