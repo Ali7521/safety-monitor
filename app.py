@@ -127,5 +127,5 @@ if __name__ == '__main__':
     ai_thread = threading.Thread(target=simulate_ai_camera_feed, daemon=True)
     ai_thread.start()
     
-    print("Starting SafetyMonitor Backend on port 5001...")
-    app.run(host='0.0.0.0', port=5001)
+    print("Starting SafetyMonitor Backend on port 9090...")
+    app.run(host='0.0.0.0', port=9090)
