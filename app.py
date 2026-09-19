@@ -46,32 +46,43 @@ def insert_incident(incident):
     conn.close()
 
 # --- AI Simulator Background Task ---
-ZONES = ["Zone A (Heavy Machinery)", "Zone B (Fabrication)", "Zone C (Office)", "Zone D (Loading Dock)"]
-EVENT_TYPES = ["ppe_violation", "slip_near_miss", "fire_hazard", "unauthorized_loitering", "vehicle_proximity", "fatigue_detected"]
+ZONES = ["Warehouse A - Sector 4", "Loading Dock B - Bay 2", "Assembly Line 1 - Packaging", "Chemical Storage Facility C", "Pedestrian Walkway - Main Gate"]
+EMPLOYEES = ["John Smith (ID: 1042)", "Sarah Jenkins (ID: 2931)", "Michael Chang (ID: 8841)", "Emily Rodriguez (ID: 4120)", "David Kim (ID: 7721)", "Unknown Contractor"]
+EVENT_TYPES = ["Missing Hard Hat", "Missing Safety Glasses", "Forklift Proximity Violation", "Liquid Spill Detected", "Improper Lifting Posture", "Unauthorized Access"]
 SEVERITIES = ["low", "medium", "high", "critical"]
 
 def simulate_ai_camera_feed():
     while True:
-        time.sleep(random.randint(10, 25)) # Trigger event every 10-25 seconds
+        time.sleep(random.randint(15, 35)) # Trigger event every 15-35 seconds
+        
+        event_type = random.choice(EVENT_TYPES)
+        zone = random.choice(ZONES)
         
         event = {
             "timestamp": datetime.now().isoformat() + "Z",
-            "zone": random.choice(ZONES),
-            "event_type": random.choice(EVENT_TYPES),
+            "zone": zone,
+            "event_type": event_type,
             "severity": random.choice(SEVERITIES),
-            "confidence": round(random.uniform(0.65, 0.99), 2),
-            "individuals": f"Emp-{random.randint(1000, 9999)}",
-            "action_taken": "Logged via AI Simulator",
+            "confidence": round(random.uniform(0.75, 0.99), 2),
+            "individuals": random.choice(EMPLOYEES),
+            "action_taken": "Logged via AI Vision System.",
             "status": "Open"
         }
         
-        # Add special features logic
-        if event["event_type"] == "fatigue_detected":
-            event["action_taken"] = "Predictive Fatigue Warning Issued. Supervisor Notified."
-        elif event["event_type"] == "vehicle_proximity":
+        # Realistic actions based on event
+        if event_type == "Forklift Proximity Violation":
             event["severity"] = "critical"
-            event["action_taken"] = "Gen-AI Voice Coach activated: 'Please step back from the forklift lane.'"
-        
+            event["action_taken"] = "PA System Warning Triggered: 'Pedestrian in forklift path.' Supervisor alerted."
+        elif event_type == "Liquid Spill Detected":
+            event["severity"] = "high"
+            event["action_taken"] = "Maintenance dispatch ticket #4921 automatically created."
+        elif event_type == "Improper Lifting Posture":
+            event["severity"] = "medium"
+            event["action_taken"] = "Ergonomics warning logged. Scheduled for weekly training review."
+        elif event_type == "Missing Hard Hat":
+            event["severity"] = "high"
+            event["action_taken"] = "SMS alert sent to Floor Manager."
+            
         insert_incident(event)
         print(f"[AI ENGINE] New event detected: {event['event_type']} in {event['zone']} (Confidence: {event['confidence']})")
 
@@ -127,5 +138,5 @@ if __name__ == '__main__':
     ai_thread = threading.Thread(target=simulate_ai_camera_feed, daemon=True)
     ai_thread.start()
     
-    print("Starting SafetyMonitor Backend on port 9090...")
-    app.run(host='0.0.0.0', port=9090)
+    print("Starting SafetyMonitor Backend on port 9091...")
+    app.run(host='0.0.0.0', port=9091)
