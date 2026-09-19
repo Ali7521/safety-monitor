@@ -3,319 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafetyMonitor AI - Next Gen Site Intelligence</title>
+    <title>Tech EHS AI - Enterprise Safety Monitoring</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        corporate: {
+                            blue: '#0d3b66',
+                            teal: '#20b2aa',
+                            light: '#f4f7f6',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0b0f19;
-            color: #e2e8f0;
-            overflow-x: hidden;
-        }
-        
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .text-gradient {
-            background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hover-lift {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .hover-lift:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-            border-color: rgba(56, 189, 248, 0.4);
-        }
-        
-        .ai-pulse {
-            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        @keyframes pulse-ring {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            100% { transform: scale(1.3); opacity: 0; }
-        }
+        body { font-family: 'Inter', -apple-system, sans-serif; }
     </style>
 </head>
-<body class="antialiased selection:bg-indigo-500 selection:text-white">
+<body class="bg-corporate-light text-slate-800 antialiased">
 
-    <!-- Navbar -->
-    <nav class="fixed w-full z-50 glass-panel border-b-0 border-white/10">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 rounded bg-gradient-to-br from-sky-400 to-indigo-600 flex items-center justify-center">
-                    <i class="fas fa-shield-halved text-white text-sm"></i>
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-200 fixed w-full z-50 top-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center">
+                    <i class="fas fa-shield-alt text-corporate-teal text-3xl mr-3"></i>
+                    <span class="text-2xl font-bold text-corporate-blue tracking-tight">Tech EHS <span class="text-sm font-normal text-corporate-teal align-top">AI</span></span>
                 </div>
-                <span class="text-xl font-bold tracking-tight text-white">SafetyMonitor<span class="text-sky-400">.ai</span></span>
-            </div>
-            <div class="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
-                <a href="#" class="hover:text-white transition">Platform</a>
-                <a href="#" class="hover:text-white transition">Solutions</a>
-                <a href="#" class="hover:text-white transition">Integrations</a>
-                <a href="#" class="hover:text-white transition">Company</a>
-            </div>
-            <div class="flex space-x-4">
-                <a href="dashboard.html" class="hidden md:inline-flex px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition items-center">
-                    Login
-                </a>
-                <a href="#" class="px-5 py-2 text-sm font-semibold rounded-full bg-white text-slate-900 hover:bg-slate-200 transition shadow-[0_0_15px_rgba(255,255,255,0.3)]">
-                    Book Demo
-                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#" class="text-gray-600 hover:text-corporate-teal font-medium transition">Platform</a>
+                    <a href="#" class="text-gray-600 hover:text-corporate-teal font-medium transition">Solutions</a>
+                    <a href="#" class="text-gray-600 hover:text-corporate-teal font-medium transition">Integrations</a>
+                </div>
+                <div class="flex space-x-4 items-center">
+                    <a href="dashboard.html" class="text-corporate-blue font-bold hover:text-corporate-teal transition">Login</a>
+                    <a href="dashboard.html" class="bg-corporate-teal hover:bg-teal-600 text-white px-6 py-2.5 rounded-md font-bold shadow-md transition transform hover:scale-105">View Live Demo</a>
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <!-- Background Grid/Glows -->
-        <div class="absolute inset-0 z-0">
-            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600 rounded-full mix-blend-screen filter blur-[128px] opacity-40"></div>
-            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-sky-600 rounded-full mix-blend-screen filter blur-[128px] opacity-40"></div>
-            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white,transparent)]"></div>
-        </div>
-
-        <div class="max-w-7xl mx-auto px-6 relative z-10 text-center">
-            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full border border-sky-400/30 bg-sky-400/10 text-sky-400 text-xs font-semibold uppercase tracking-wider mb-8">
-                <span class="relative flex h-2 w-2 mr-1">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
-                </span>
-                Proactive AI Safety
-            </div>
-            
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-8">
-                Site Intelligence, <br />
-                <span class="text-gradient">Automated by AI.</span>
-            </h1>
-            
-            <p class="mt-4 text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed">
-                Transform your existing CCTV into a proactive safety network. We detect hazards, predict incidents, and enforce compliance in real-time—no new hardware required.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
-                <a href="#" class="px-8 py-4 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-lg transition shadow-[0_0_20px_rgba(79,70,229,0.4)] w-full sm:w-auto">
-                    Start Free Trial
-                </a>
-                <a href="#" class="px-8 py-4 rounded-full glass-panel hover:bg-slate-800 text-white font-semibold text-lg transition flex items-center w-full sm:w-auto justify-center">
-                    <i class="fas fa-play-circle mr-2 text-sky-400"></i> Watch Platform Tour
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Core AI Modules (Similar to Protex but expanded) -->
-    <section class="py-24 bg-slate-900/50 relative z-10">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-5xl font-bold mb-4">Comprehensive Visual AI Modules</h2>
-                <p class="text-slate-400 text-lg max-w-2xl mx-auto">Our computer vision models are pre-trained on millions of industrial hours to understand your facility's unique risks instantly.</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Module 1 -->
-                <div class="glass-panel p-8 rounded-2xl hover-lift">
-                    <div class="w-12 h-12 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center text-xl mb-6">
-                        <i class="fas fa-truck-moving"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Vehicle & Forklift Control</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">Detect proximity violations between MHE (Material Handling Equipment) and pedestrians. Monitor exclusion zones and speed.</p>
-                </div>
-                <!-- Module 2 -->
-                <div class="glass-panel p-8 rounded-2xl hover-lift">
-                    <div class="w-12 h-12 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xl mb-6">
-                        <i class="fas fa-hard-hat"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">PPE Compliance</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">Real-time detection of hard hats, high-vis vests, safety glasses, and gloves, mapped specifically to mandatory zones.</p>
-                </div>
-                <!-- Module 3 -->
-                <div class="glass-panel p-8 rounded-2xl hover-lift">
-                    <div class="w-12 h-12 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl mb-6">
-                        <i class="fas fa-person-falling"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Ergonomics & Slips</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">Analyze lifting postures to prevent musculoskeletal injuries. Instantly alert on slips, trips, falls, and near-misses.</p>
-                </div>
-                <!-- Module 4 -->
-                <div class="glass-panel p-8 rounded-2xl hover-lift">
-                    <div class="w-12 h-12 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl mb-6">
-                        <i class="fas fa-ban"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Area Access Control</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">Geofence high-risk areas digitally. Alert instantly if unauthorized or untrained personnel enter restricted zones.</p>
-                </div>
-                <!-- Module 5 -->
-                <div class="glass-panel p-8 rounded-2xl hover-lift">
-                    <div class="w-12 h-12 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl mb-6">
-                        <i class="fas fa-broom"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Housekeeping & Spills</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">Automatically detect liquid spills, blocked fire exits, and debris in walkways that pose tripping hazards.</p>
-                </div>
-                <!-- Module 6 -->
-                <div class="glass-panel p-8 rounded-2xl hover-lift border-indigo-500/30 relative overflow-hidden">
-                    <div class="absolute top-0 right-0 bg-indigo-600 text-xs font-bold px-3 py-1 rounded-bl-lg text-white">TECH EHS INTEGRATION</div>
-                    <div class="w-12 h-12 rounded-lg bg-pink-500/20 text-pink-400 flex items-center justify-center text-xl mb-6">
-                        <i class="fas fa-chart-pie"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-3">Advanced EHS Workflows</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">End-to-end incident tracking, root cause analysis (Fishbone/Why-Why), and automated action management dashboards.</p>
+    <section class="pt-32 pb-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 pr-8 mb-12 md:mb-0">
+                <span class="bg-blue-50 text-corporate-blue text-sm font-bold px-3 py-1 rounded-full border border-blue-200 mb-6 inline-block">PROACTIVE SAFETY MONITORING</span>
+                <h1 class="text-5xl md:text-6xl font-extrabold text-corporate-blue leading-tight mb-6">
+                    Site Intelligence, <br><span class="text-corporate-teal">Automated by AI.</span>
+                </h1>
+                <p class="text-lg text-gray-600 mb-8 max-w-lg leading-relaxed">
+                    Transform your existing CCTV into a proactive safety network. We detect hazards, predict incidents, and enforce compliance in real-time—no new hardware required.
+                </p>
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="dashboard.html" class="bg-corporate-blue hover:bg-blue-900 text-white text-center px-8 py-4 rounded-md font-bold text-lg shadow-xl transition transform hover:-translate-y-1">Start Free Trial</a>
+                    <a href="dashboard.html" class="bg-white border-2 border-gray-200 hover:border-corporate-teal hover:text-corporate-teal text-corporate-blue text-center px-8 py-4 rounded-md font-bold text-lg transition flex items-center justify-center">
+                        <i class="fas fa-play-circle mr-2 text-corporate-teal"></i> Interactive Tour
+                    </a>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- NEW CUTTING EDGE FEATURES (The Request: "Add some new feature") -->
-    <section class="py-24 relative z-10 border-y border-white/5">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex flex-col lg:flex-row gap-16 items-center">
-                <div class="lg:w-1/2">
-                    <h2 class="text-sky-400 font-bold tracking-widest text-sm uppercase mb-3">Next-Generation Capabilities</h2>
-                    <h3 class="text-3xl md:text-5xl font-bold mb-6">Beyond basic vision. <br />Welcome to Predictive AI.</h3>
-                    <p class="text-slate-400 text-lg mb-8">We don't just record what happened. We analyze micro-behaviors and contextual data to stop accidents before the chain of events completes.</p>
-                    
-                    <div class="space-y-6">
-                        <!-- New Feature 1 -->
-                        <div class="flex gap-4">
-                            <div class="mt-1 w-10 h-10 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 flex-shrink-0 flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.5)]">
-                                <i class="fas fa-brain text-white text-sm"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-white font-bold text-xl mb-1">Predictive Fatigue Monitoring</h4>
-                                <p class="text-slate-400 text-sm">Analyzes posture slumps, micro-expressions, and inactivity over a shift to predict worker fatigue, triggering mandatory breaks before accidents occur.</p>
-                            </div>
-                        </div>
+            <div class="md:w-1/2 relative">
+                <!-- Hero Image Mockup -->
+                <div class="bg-gray-100 p-2 rounded-2xl shadow-2xl border border-gray-200">
+                    <div class="bg-corporate-blue rounded-xl overflow-hidden relative" style="padding-bottom: 60%;">
+                        <div class="absolute inset-0 bg-cover bg-center opacity-80" style="background-image: url('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80');"></div>
+                        <div class="absolute inset-0 bg-corporate-blue/30"></div>
                         
-                        <!-- New Feature 2 -->
-                        <div class="flex gap-4">
-                            <div class="mt-1 w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-indigo-600 flex-shrink-0 flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.5)]">
-                                <i class="fas fa-volume-high text-white text-sm"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-white font-bold text-xl mb-1">Gen-AI Voice Coach (Multilingual)</h4>
-                                <p class="text-slate-400 text-sm">Connects to site PA systems or mobile apps to deliver instant, conversational, and localized voice corrections when unsafe behaviors are detected.</p>
-                            </div>
-                        </div>
-
-                        <!-- New Feature 3 -->
-                        <div class="flex gap-4">
-                            <div class="mt-1 w-10 h-10 rounded-full bg-gradient-to-r from-emerald-400 to-teal-600 flex-shrink-0 flex items-center justify-center shadow-[0_0_15px_rgba(52,211,153,0.5)]">
-                                <i class="fas fa-drone text-white text-sm"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-white font-bold text-xl mb-1">Autonomous Drone & Robot Sync</h4>
-                                <p class="text-slate-400 text-sm">Integrate with Boston Dynamics Spot or site drones for automated safety sweeps in extreme environments where humans shouldn't operate.</p>
-                            </div>
+                        <!-- Mock AI Box -->
+                        <div class="absolute top-1/4 left-1/3 w-32 h-40 border-2 border-red-500 bg-red-500/20">
+                            <span class="bg-red-500 text-white text-xs px-1 absolute -top-5 left-[-2px] font-mono">NO_HARDHAT 98%</span>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 bg-corporate-light border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-corporate-blue">Enterprise-Grade EHS Platform</h2>
+                <p class="text-gray-500 mt-4 max-w-2xl mx-auto">Everything you need to automate safety audits, track compliance, and manage workflows in one unified dashboard.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
+                    <div class="w-14 h-14 bg-teal-50 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-video text-2xl text-corporate-teal"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-corporate-blue mb-3">Live AI Computer Vision</h3>
+                    <p class="text-gray-600">Instantly detects PPE violations, forklift proximity risks, and spills using your existing cameras.</p>
                 </div>
                 
-                <div class="lg:w-1/2 w-full relative">
-                    <!-- Abstract Futuristic UI Mockup -->
-                    <div class="glass-panel p-2 rounded-2xl border border-indigo-500/30 shadow-2xl relative z-10 transform lg:rotate-2 hover:rotate-0 transition duration-500">
-                        <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-700">
-                            <!-- Header -->
-                            <div class="bg-slate-800 px-4 py-3 flex justify-between items-center border-b border-slate-700">
-                                <div class="flex space-x-2">
-                                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
-                                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-                                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
-                                </div>
-                                <div class="text-xs text-slate-400 font-mono">LIVE_FEED // ZONE_ALPHA</div>
-                            </div>
-                            <!-- Mock Video Area -->
-                            <div class="relative h-64 bg-slate-950 flex items-center justify-center overflow-hidden">
-                                <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-                                <!-- Bounding Box UI -->
-                                <div class="absolute top-1/4 left-1/4 w-32 h-48 border-2 border-red-500 bg-red-500/10 flex flex-col justify-between">
-                                    <div class="bg-red-500 text-white text-[10px] font-bold px-1 self-start">MISSING_PPE: 98%</div>
-                                    <div class="bg-red-500 w-2 h-2 rounded-full absolute -top-1 -left-1"></div>
-                                    <div class="bg-red-500 w-2 h-2 rounded-full absolute -bottom-1 -right-1"></div>
-                                </div>
-                                <!-- Predictive Fatigue UI -->
-                                <div class="absolute bottom-1/4 right-1/4 w-40 h-32 border-2 border-amber-500 bg-amber-500/10 flex flex-col justify-between">
-                                    <div class="bg-amber-500 text-white text-[10px] font-bold px-1 self-start">FATIGUE_PROB: 87%</div>
-                                </div>
-                                <!-- Scan Line -->
-                                <div class="absolute inset-0 border-t-2 border-sky-400/50 h-full animate-[scan_3s_ease-in-out_infinite]"></div>
-                            </div>
-                            <!-- Bottom Metrics -->
-                            <div class="grid grid-cols-3 gap-1 bg-slate-900 p-3">
-                                <div class="bg-slate-800 rounded p-2 text-center">
-                                    <div class="text-[10px] text-slate-400">INCIDENT RATE</div>
-                                    <div class="text-lg font-bold text-emerald-400">-42%</div>
-                                </div>
-                                <div class="bg-slate-800 rounded p-2 text-center">
-                                    <div class="text-[10px] text-slate-400">ACTIVE ALERTS</div>
-                                    <div class="text-lg font-bold text-red-400">3</div>
-                                </div>
-                                <div class="bg-slate-800 rounded p-2 text-center">
-                                    <div class="text-[10px] text-slate-400">AI CONFIDENCE</div>
-                                    <div class="text-lg font-bold text-sky-400">99.1%</div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="bg-white p-8 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
+                    <div class="w-14 h-14 bg-blue-50 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-chart-pie text-2xl text-corporate-blue"></i>
                     </div>
-                    
-                    <!-- Decorative Blur -->
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full blur-[100px] opacity-30 z-0"></div>
+                    <h3 class="text-xl font-bold text-corporate-blue mb-3">Advanced BI Analytics</h3>
+                    <p class="text-gray-600">Track incident hotspots, compliance rates, and automated interventions with interactive charts.</p>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-md border border-gray-100 hover:shadow-lg transition">
+                    <div class="w-14 h-14 bg-teal-50 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-file-signature text-2xl text-corporate-teal"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-corporate-blue mb-3">Electronic Signatures</h3>
+                    <p class="text-gray-600">Digitize your CAPA workflows. Sign off on incident resolutions securely with immutable audit trails.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Digital Transformation & Extensibility (Merging Tech EHS features) -->
-    <section class="py-24 bg-slate-900/80">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold mb-4">Enterprise Grade Extensibility</h2>
-                <p class="text-slate-400">Built for scale with all the robust features demanded by modern EHS operations.</p>
-            </div>
-            
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                <!-- Mini Feature Badges -->
-                <div class="glass-panel rounded border border-white/5 p-3 text-center text-sm font-medium hover:bg-white/5 transition cursor-default">☁️ Cloud / On-Prem</div>
-                <div class="glass-panel rounded border border-white/5 p-3 text-center text-sm font-medium hover:bg-white/5 transition cursor-default">📱 Native Mobile App</div>
-                <div class="glass-panel rounded border border-white/5 p-3 text-center text-sm font-medium hover:bg-white/5 transition cursor-default">🔐 Single Sign On (SSO)</div>
-                <div class="glass-panel rounded border border-white/5 p-3 text-center text-sm font-medium hover:bg-white/5 transition cursor-default">📊 BI Analytics Sync</div>
-                <div class="glass-panel rounded border border-white/5 p-3 text-center text-sm font-medium hover:bg-white/5 transition cursor-default">🌍 Multilingual Engine</div>
-                <div class="glass-panel rounded border border-white/5 p-3 text-center text-sm font-medium hover:bg-white/5 transition cursor-default">📜 Immutable Audit Trail</div>
-                <div class="glass-panel rounded border border-white/5 p-3 text-center text-sm font-medium hover:bg-white/5 transition cursor-default">✉️ Instant Email/SMS</div>
-                <div class="glass-panel rounded border border-white/5 p-3 text-center text-sm font-medium hover:bg-white/5 transition cursor-default">📍 Geotagging</div>
-                <div class="glass-panel rounded border border-white/5 p-3 text-center text-sm font-medium hover:bg-white/5 transition cursor-default">🔗 Open API / Webhooks</div>
-                <div class="glass-panel rounded border border-white/5 p-3 text-center text-sm font-medium hover:bg-white/5 transition cursor-default">✍️ Electronic Signatures</div>
-                <div class="glass-panel rounded border border-white/5 p-3 text-center text-sm font-medium hover:bg-white/5 transition cursor-default">📸 Image Annotation</div>
-                <div class="glass-panel rounded border border-white/5 p-3 text-center text-sm font-medium hover:bg-white/5 transition cursor-default">⚙️ Custom Escalation Matrix</div>
-            </div>
-        </div>
+    <!-- Call to Action -->
+    <section class="py-20 bg-corporate-blue text-center px-4">
+        <h2 class="text-3xl font-bold text-white mb-6">Ready to upgrade your safety culture?</h2>
+        <a href="dashboard.html" class="inline-block bg-corporate-teal hover:bg-teal-400 text-white px-10 py-4 rounded-md font-bold text-lg shadow-lg transition transform hover:-translate-y-1">Launch Live Dashboard Demo</a>
     </section>
 
     <!-- Footer -->
-    <footer class="border-t border-white/10 pt-16 pb-8 text-center bg-[#0b0f19]">
-        <div class="text-2xl font-bold tracking-tight text-white mb-6">SafetyMonitor<span class="text-sky-400">.ai</span></div>
-        <p class="text-slate-500 text-sm max-w-md mx-auto mb-8">
-            Turning your existing cameras into site intelligence for EHS and operations teams. Privacy by design.
-        </p>
-        <p class="text-slate-600 text-xs">&copy; 2026 SafetyMonitor AI, Inc. All rights reserved.</p>
+    <footer class="bg-slate-900 text-slate-400 py-12 text-center">
+        <p>&copy; 2026 Tech EHS AI Solutions. All rights reserved.</p>
     </footer>
 
-    <style>
-        @keyframes scan {
-            0% { transform: translateY(-100%); }
-            50% { transform: translateY(100%); }
-            100% { transform: translateY(-100%); }
-        }
-    </style>
 </body>
 </html>

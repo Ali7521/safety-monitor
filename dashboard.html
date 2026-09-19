@@ -367,57 +367,93 @@
             if (tabId === 'analytics' && !chartsRendered) renderCharts();
         }
 
-        // --- Data Fetching (App.py integration) ---
+        // --- Local Data Generation (Works on Vercel without Python) ---
+        let incidentsList = [];
+        const ZONES = ["Warehouse A - Sector 4", "Loading Dock B - Bay 2", "Assembly Line 1 - Packaging", "Chemical Storage Facility C", "Pedestrian Walkway - Main Gate"];
+        const EMPLOYEES = ["John Smith (ID: 1042)", "Sarah Jenkins (ID: 2931)", "Michael Chang (ID: 8841)", "Emily Rodriguez (ID: 4120)", "David Kim (ID: 7721)", "Unknown Contractor"];
+        const EVENT_TYPES = ["Missing Hard Hat", "Missing Safety Glasses", "Forklift Proximity Violation", "Liquid Spill Detected", "Improper Lifting Posture", "Unauthorized Access"];
+        const SEVERITIES = ["low", "medium", "high", "critical"];
+
         function getSeverityBadge(sev) { return `<span class="px-2 py-1 text-xs font-bold border rounded uppercase severity-${sev.toLowerCase()}">${sev}</span>`; }
 
-        function fetchIncidents() {
-            fetch('/api/incidents')
-                .then(res => res.json())
-                .then(data => {
-                    const tbody = document.getElementById('incidents-body');
-                    tbody.innerHTML = '';
-                    let openCount = 0, interventions = 0;
-                    
-                    if (data.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-gray-400">No events logged.</td></tr>';
-                        return;
-                    }
+        function generateIncident() {
+            const type = EVENT_TYPES[Math.floor(Math.random() * EVENT_TYPES.length)];
+            let severity = SEVERITIES[Math.floor(Math.random() * SEVERITIES.length)];
+            let action = "Logged via AI Vision System.";
+            
+            if (type === "Forklift Proximity Violation") { severity = "critical"; action = "PA System Warning Triggered."; }
+            else if (type === "Liquid Spill Detected") { severity = "high"; action = "Maintenance ticket #4921 created."; }
+            else if (type === "Improper Lifting Posture") { severity = "medium"; action = "Ergonomics warning logged."; }
+            else if (type === "Missing Hard Hat") { severity = "high"; action = "SMS alert sent to Manager."; }
 
-                    data.forEach(inc => {
-                        if (inc.status === 'Open') openCount++;
-                        if (inc.action_taken.includes('Voice') || inc.action_taken.includes('Alert')) interventions++;
-                        
-                        const time = new Date(inc.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-                        const row = document.createElement('tr');
-                        row.className = 'hover:bg-gray-50 transition border-b border-gray-100';
-                        
-                        row.innerHTML = `
-                            <td class="px-6 py-4 font-mono text-xs text-gray-500 whitespace-nowrap">${time}</td>
-                            <td class="px-6 py-4">
-                                <div class="font-bold text-corporate-blue">${inc.zone}</div>
-                                <div class="text-xs text-gray-500">${inc.individuals}</div>
-                            </td>
-                            <td class="px-6 py-4">
-                                <div class="font-bold text-gray-700">${inc.event_type}</div>
-                                <div class="text-xs text-gray-400 truncate max-w-xs">${inc.action_taken}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">${getSeverityBadge(inc.severity)}</td>
-                        `;
-                        tbody.appendChild(row);
-                    });
-                    
-                    document.getElementById('metric-open').innerText = openCount;
-                    document.getElementById('metric-interventions').innerText = interventions;
-                    
-                    addAuditLog(`Synchronized ${data.length} records from central database.`);
-                }).catch(err => console.log("Backend offline.", err));
+            incidentsList.unshift({
+                id: Math.random().toString(36).substr(2, 9),
+                timestamp: new Date().toISOString(),
+                zone: ZONES[Math.floor(Math.random() * ZONES.length)],
+                event_type: type,
+                severity: severity,
+                individuals: EMPLOYEES[Math.floor(Math.random() * EMPLOYEES.length)],
+                action_taken: action,
+                status: "Open"
+            });
+            if (incidentsList.length > 50) incidentsList.pop();
+            renderIncidents();
         }
-        setInterval(fetchIncidents, 5000);
-        fetchIncidents();
+
+        function renderIncidents() {
+            const tbody = document.getElementById('incidents-body');
+            tbody.innerHTML = '';
+            let openCount = 0, interventions = 0;
+            
+            if (incidentsList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-gray-400">No events logged yet. AI Monitoring active.</td></tr>';
+                return;
+            }
+
+            incidentsList.forEach(inc => {
+                if (inc.status === 'Open') openCount++;
+                if (inc.action_taken.includes('Warning') || inc.action_taken.includes('alert')) interventions++;
+                
+                const time = new Date(inc.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50 transition border-b border-gray-100';
+                
+                row.innerHTML = `
+                    <td class="px-6 py-4 font-mono text-xs text-gray-500 whitespace-nowrap">${time}</td>
+                    <td class="px-6 py-4">
+                        <div class="font-bold text-corporate-blue">${inc.zone}</div>
+                        <div class="text-xs text-gray-500">${inc.individuals}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="font-bold text-gray-700">${inc.event_type}</div>
+                        <div class="text-xs text-gray-400 truncate max-w-xs">${inc.action_taken}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">${getSeverityBadge(inc.severity)}</td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            document.getElementById('metric-open').innerText = openCount;
+            document.getElementById('metric-interventions').innerText = interventions;
+            addAuditLog(`Live sync complete. Tracking ${incidentsList.length} events.`);
+        }
+        
+        // Generate initial data and then randomly every 5-15 seconds
+        for(let i=0; i<5; i++) generateIncident();
+        setInterval(generateIncident, Math.random() * 10000 + 5000);
 
         // --- Export Data ---
         function exportData() {
-            window.location.href = '/api/export/csv';
+            let csvContent = "data:text/csv;charset=utf-8,Time,Zone,Employee,Issue,Severity,Action\n" 
+                + incidentsList.map(e => `${e.timestamp},"${e.zone}","${e.individuals}","${e.event_type}",${e.severity},"${e.action_taken}"`).join("\n");
+            
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "safety_report.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
             addAuditLog("User John Doe downloaded CSV Export.");
         }
 
