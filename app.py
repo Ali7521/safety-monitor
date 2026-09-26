@@ -112,7 +112,7 @@ def resolve_incident(incident_id):
     c.execute("UPDATE incidents SET status = 'Closed' WHERE id = ?", (incident_id,))
     conn.commit()
     conn.close()
-    return jsonify({"success": True})
+    returnjsonify({"success": True})
 
 @app.route('/api/export/csv')
 def export_csv():
